@@ -1,0 +1,14 @@
+{
+  "name": "sistema-facturacion-front",
+  "version": "0.1.0",
+  "description": "Sistema de facturacion en ElectronJS",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Fabian",
+  "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-reload": "^2.0.0-alpha.1"
+  }
+}
