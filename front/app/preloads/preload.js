@@ -22,3 +22,7 @@ contextBridge.exposeInMainWorld("login", {
     return result;
   },
 });
+
+contextBridge.exposeInMainWorld("alert", {
+  alert: async (titulo, body) => await ipcRenderer.invoke("alertNot", { titulo, body }),
+});

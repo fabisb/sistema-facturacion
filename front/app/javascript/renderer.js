@@ -18,9 +18,11 @@ function loguear(e) {
   console.log("🚀 ~ file: renderer.js:19 ~ loguear ~ pass:", pass)
   if (user == '' || pass == '') {
     return
-
-
   }
+  
+  
+  
+
 }
 
 async function facturarWindow() {
