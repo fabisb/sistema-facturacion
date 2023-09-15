@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 const electronReload = require("electron-reload");
@@ -8,6 +8,7 @@ if (env === "development") {
   require("electron-reload")(__dirname, {
     electron: path.join(__dirname, "node_modules", ".bin", "electron"),
     hardResetMethod: "exit",
+    ignored: /main\.js/,
   });
 }
 function createWindow() {
@@ -85,6 +86,26 @@ ipcMain.handle("editarWindow", () => editarWindow());
 ipcMain.handle("agregarWindow", () => agregarWindow());
 ipcMain.handle("consultarWindow", () => consultarWindow());
 
+ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
+  const currentWindow = event.sender.getOwnerBrowserWindow();
+  const result = await dialog.showMessageBox(currentWindow, {
+    type: "info",
+    message: titulo,
+    detail: body,
+    buttons: ["OK", "Cancel"],
+    defaultId: 0,
+    title: "Alerta",
+    cancelId: 1,
+  });
+  console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
+  return result;
+});
+ipcMain.handle("errorWindow", async (event, arg) => {
+  const currentWindow = event.sender.getOwnerBrowserWindow();
+  const result = await dialog.showErrorBox("ERROR", "Ha ocurrido un error en el servidor");
+  console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
+  return result;
+});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

@@ -1,22 +1,24 @@
 import jwt from "jsonwebtoken";
-import { pool } from "../database/db";
+import { pool } from "../database/db.js";
 export const loginController = async (req, res, next) => {
   console.log("loginController");
   const { user, pass } = req.body;
-  if (user == "" || pass == "") {
+  if (!(user || pass) || user == "" || pass == "") {
     return res.status(422).json({ mensaje: "Error al iniciar sesion, valide los datos" });
   }
-  const [id] = await pool.execute("SELECT id FROM users WHERE username = ? AND pass = ?", [
-    user,
-    pass,
-  ]);
-  if (id) {
-    var token = await jwt.sign({ id, user }, "secret", { expiresIn: "1 days" });
-    console.log("🚀 ~ file: login.controller.js:14 ~ loginController ~ id:", id);
+  const [id] = await pool.execute(
+    "SELECT id, nivel FROM users WHERE username = ? AND password = ?",
+    [user, pass]
+  );
+  console.log("🚀 ~ file: login.controller.js:13 ~ loginController ~ id:", id);
+  if (id.length>0) {
+    var token = await jwt.sign({ id: id[0].id, user, nivel: id[0].nivel }, "secret", {
+      expiresIn: "1 days",
+    });
     console.log("🚀 ~ file: login.controller.js:15 ~ loginController ~ token:", token);
     res.cookie("token", token, { httpOnly: true });
     res.cookie("username", user, { httpOnly: true });
-    return res.status(200);
+    return res.status(200).json('Login completado');
   } else {
     return res
       .status("404")

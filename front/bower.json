@@ -1,0 +1,20 @@
+{
+  "name": "sistema-facturacion-front",
+  "description": "Sistema de facturacion en ElectronJS",
+  "main": "main.js",
+  "authors": [
+    "Fabian"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/fabisb/sistema-facturacion",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^5.3.2"
+  }
+}

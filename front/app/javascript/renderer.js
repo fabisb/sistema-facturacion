@@ -10,17 +10,37 @@ function renderer() {
   document.getElementById("isLog").hidden = true;
 }
 
-function loguear(e) {
+
+async function loguear(e) {
   e.preventDefault()
   const user = document.getElementById('userLog').value;
   console.log("🚀 ~ file: renderer.js:17 ~ loguear ~ user:", user)
   const pass = document.getElementById('passwordLog').value;
   console.log("🚀 ~ file: renderer.js:19 ~ loguear ~ pass:", pass)
   if (user == '' || pass == '') {
-    return
+    const res = await alerta.alert('Error al iniciar sesion','Los datos ingresados no son validos')
+    console.log("🚀 ~ file: renderer.js:21 ~ loguear ~ res:", res)
+    return  
+  }try {
+    const res=await axios.post(urlsv+'/api/users/login',{user,pass})
+    console.log("🚀 ~ file: renderer.js:26 ~ loguear ~ res:", res)
+    console.log(document.cookie)
+    login.getCookie('token')
+  } catch (error) {
+    console.log(error)
+    if (error.response.data.mensaje) {
+      
+      const res = await alerta.alert('Error al iniciar sesion',error.response.data.mensaje)
+      return res
+    }else{
+      return await alerta.error()
+    }
   }
   
   
+  document.getElementById("isLog").hidden = false;
+  document.getElementById("login").hidden = true;
+
   
 
 }
