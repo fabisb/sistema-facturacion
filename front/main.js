@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const Store = require("electron-store");
 const path = require("path");
 
 const electronReload = require("electron-reload");
@@ -11,6 +12,16 @@ if (env === "development") {
     ignored: /main\.js/,
   });
 }
+const store = new Store();
+
+ipcMain.on("token",async  (event, token) => {
+  store.clear();
+  await store.set("token", token);
+});
+ipcMain.handle("getToken", (event, arg) => {
+  const token = store.get("token");
+  return token;
+});
 function createWindow() {
   // Create the browser window.
   let mainWindow = new BrowserWindow({
@@ -34,7 +45,7 @@ function facturarWindow() {
     height: 600,
     title: "Facturar",
     webPreferences: {
-      preload: path.join(__dirname, "app/preloads/facturar.js"),
+      preload: path.join(__dirname, "app/preloads/preload.js"),
       //devTools:false
     },
   });
@@ -47,7 +58,7 @@ function agregarWindow() {
     height: 600,
     title: "Agregar Producto",
     webPreferences: {
-      preload: path.join(__dirname, "app/preloads/agregar.js"),
+      preload: path.join(__dirname, "app/preloads/preload.js"),
       //devTools:false
     },
   });
@@ -60,7 +71,7 @@ function consultarWindow() {
     height: 600,
     title: "Consultar Factura",
     webPreferences: {
-      preload: path.join(__dirname, "app/preloads/consultar.js"),
+      preload: path.join(__dirname, "app/preloads/preload.js"),
       //devTools:false
     },
   });
@@ -73,7 +84,7 @@ function editarWindow() {
     height: 600,
     title: "Editar Producto",
     webPreferences: {
-      preload: path.join(__dirname, "app/preloads/editar.js"),
+      preload: path.join(__dirname, "app/preloads/preload.js"),
       //devTools:false
     },
   });
