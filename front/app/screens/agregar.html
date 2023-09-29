@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
-
-</head>
-<body>
+  </head>
+  <body>
     <h2>Sistema de Facturacion</h2>
     <h3>Agregar Producto</h3>
 
-    <div class="container"></div>
+    <div class="container">
+      <form onsubmit="event.preventDefault(),agregarProductoForm()"></form>
+      <label for="tipoProductoList" class="form-label">Tipo de producto</label>
+      <input
+        class="form-control"
+        list="tipoProductoOptions"
+        id="tipoProductoList"
+        placeholder="Escribe un tipo de producto..."
+      />
+      <datalist id="tipoProductoOptions">
+        <option value="Carne"></option>
+        <option value="Viveres"></option>
+        <option value="Charcuteria"></option>
+        <option value="Cosmeticos"></option>
+        <option value="Limpieza"></option>
+      </datalist>
+
+      <div class="input-group">
+        <span class="input-group-text">Nombre</span>
+        <input class="form-control" required type="text" placeholder="Nombre del producto" />
+        <span class="input-group-text">Cantidad</span>
+        <input type="number" placeholder="Cantidad a ingresar" required class="form-control" />
+      </div>
+    </div>
     <script src="../javascript/agregar.js"></script>
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>
