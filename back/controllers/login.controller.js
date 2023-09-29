@@ -11,24 +11,18 @@ export const loginController = async (req, res, next) => {
     [user, pass]
   );
   console.log("🚀 ~ file: login.controller.js:13 ~ loginController ~ id:", id);
-  if (id.length>0) {
+  if (id.length > 0) {
     var token = await jwt.sign({ id: id[0].id, user, nivel: id[0].nivel }, "secret", {
       expiresIn: "1 days",
     });
     console.log("🚀 ~ file: login.controller.js:15 ~ loginController ~ token:", token);
-    res.cookie("token", token, { httpOnly: true });
-    res.cookie("username", user, { httpOnly: true });
-    return res.status(200).json('Login completado');
+
+    return res.status(200).json({ token, user });
   } else {
     return res
       .status("404")
       .json({ mensaje: "No se han encontrado informacion con ese usuario o contraseña" });
   }
-};
-
-export const clearCookie = (req, res, next) => {
-  res.clearCookie("token");
-  res.clearCookie("username");
 };
 
 export const verifyToken = async (req, res, next) => {
