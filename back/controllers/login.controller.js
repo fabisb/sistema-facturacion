@@ -26,8 +26,7 @@ export const loginController = async (req, res, next) => {
 };
 
 export const verifyToken = async (req, res, next) => {
-  console.log("🚀 ~ file: login.controller.js:25 ~ verifyToken ~ req.cookies:", req.cookies);
-  const { token } = req.cookies;
+const {token}=req.headers;
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {

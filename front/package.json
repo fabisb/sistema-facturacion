@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron ."
   },
+  "postinstall": "bower install",
   "author": "Fabian",
   "devDependencies": {
     "electron": "^26.0.0",
