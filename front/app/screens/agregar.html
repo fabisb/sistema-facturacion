@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
   </head>
-  <body>
+  <body onload="render()">
     <h2>Sistema de Facturacion</h2>
     <h3>Agregar Producto</h3>
 
@@ -54,9 +54,21 @@
           >
         </div>
         <div class="text-center my-2">
-          <button type="submit" class="btn-lg btn btn-success">Agregar</button>
+          <button type="submit" id="agregarBtn" class="btn-lg btn btn-success">Agregar</button>
         </div>
       </form>
+    </div>
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="liveToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">Producto</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Producto agregado con exito!
+        </div>
+      </div>
     </div>
     <script src="../javascript/agregar.js"></script>
     <script src="../modules/axios.min.js"></script>

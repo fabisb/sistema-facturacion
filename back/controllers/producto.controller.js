@@ -15,7 +15,7 @@ export const agregarController = async (req, res, next) => {
     "SELECT nombre, tipo FROM productos WHERE nombre = ? AND tipo = ?",
     [nombre, tipo]
   );
-  console.log("🚀 ~ file: producto.controller.js:18 ~ agregarController ~ existencia:", existencia)
+  console.log("🚀 ~ file: producto.controller.js:18 ~ agregarController ~ existencia:", existencia);
   if (existencia.length > 0) {
     return res
       .status(405)
@@ -25,11 +25,13 @@ export const agregarController = async (req, res, next) => {
       nombre,
       tipo,
     ]);
-    console.log("🚀 ~ file: producto.controller.js:28 ~ agregarController ~ insertado:", insertado.insertId)
-    await pool.execute("INSERT INTO cantidad_producto (id_producto, cantidad, minimo) VALUES (?,?,?)", [
-        insertado.insertId,
-        cantidad,
-      minimo
+    console.log(
+      "🚀 ~ file: producto.controller.js:28 ~ agregarController ~ insertado:",
+      insertado.insertId
+    );
+    await pool.execute("INSERT INTO cantidad_producto (id_producto, cantidad) VALUES (?,?)", [
+      insertado.insertId,
+      cantidad,
     ]);
     return res.status(200).json({ mensaje: "Insertado exitoso" });
   }

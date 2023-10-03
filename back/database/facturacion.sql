@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2023 a las 23:50:57
+-- Tiempo de generación: 03-10-2023 a las 06:19:44
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -30,9 +30,23 @@ SET time_zone = "+00:00";
 CREATE TABLE `cantidad_producto` (
   `id` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
-  `cantidad` decimal(7,2) NOT NULL,
-  `minimo` decimal(7,2) NOT NULL
+  `cantidad` decimal(7,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cantidad_producto`
+--
+
+INSERT INTO `cantidad_producto` (`id`, `id_producto`, `cantidad`) VALUES
+(1, 1, 12.50),
+(2, 2, 2.00),
+(3, 3, 2.00),
+(4, 4, 2.00),
+(5, 5, 12.00),
+(6, 6, 12.00),
+(7, 7, 15.00),
+(8, 8, 15.00),
+(9, 9, 2.00);
 
 -- --------------------------------------------------------
 
@@ -107,6 +121,21 @@ CREATE TABLE `productos` (
   `nombre` varchar(150) NOT NULL,
   `tipo` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`id`, `nombre`, `tipo`) VALUES
+(1, 'bistec', 'Carnes'),
+(2, 'pollo', 'Carnes'),
+(3, 'pollo1', 'Carnes'),
+(4, 'pollo2', 'Carnes'),
+(5, 'pollo4', 'Carnes'),
+(6, 'pollo5', 'Carnes'),
+(7, 'pollo6', 'Carnes'),
+(8, 'pollo7', 'Carnes'),
+(9, 'pollo8', 'Carnes');
 
 -- --------------------------------------------------------
 
@@ -189,7 +218,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `cantidad_producto`
 --
 ALTER TABLE `cantidad_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_factura`
@@ -213,7 +242,7 @@ ALTER TABLE `niveles_usuario`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `users`

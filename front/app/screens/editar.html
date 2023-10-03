@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  </head>
+  <body onload="render()">
+    <h2>Sistema de Facturacion</h2>
+    <h3>Editar Producto</h3>
+
+    <div class="container">
+      <form onsubmit="event.preventDefault(),editarProductoForm()">
+        <div class="my-2">
+          <label for="tipoProductoList" class="form-label">Tipo de producto</label>
+          <input
+            class="form-control"
+            list="tipoProductoOptions"
+            id="tipoProductoList"
+            placeholder="Escribe un tipo de producto..."
+          />
+          <datalist id="tipoProductoOptions">
+            <option value="Carnes"></option>
+            <option value="Viveres"></option>
+            <option value="Charcuteria"></option>
+            <option value="Cosmeticos"></option>
+            <option value="Limpieza"></option>
+          </datalist>
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-text">Nombre</span>
+          <input
+            id="nombreForm"
+            class="form-control"
+            required
+            type="text"
+            placeholder="Nombre del producto"
+          />
+          <span class="input-group-text">Cantidad</span>
+          <input
+            id="cantidadForm"
+            type="number"
+            step="1"
+            min="0"
+            placeholder="Cantidad a ingresar"
+            required
+            class="form-control"
+          />
+          <span class="input-group-text"
+            ><button type="button" class="btn btn-outline-dark" onclick="tipoCantidad()" id="cantidadTipoBtn">
+              Unidad
+            </button></span
+          >
+        </div>
+        <div class="text-center my-2">
+          <button type="submit" id="agregarBtn" class="btn-lg btn btn-success">Agregar</button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="liveToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">Producto</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Producto agregado con exito!
+        </div>
+      </div>
+    </div>
+    <script src="../javascript/editar.js"></script>
+    <script src="../modules/axios.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -17,16 +17,27 @@ const agregarProductoForm = async () => {
   }
   const token = await login.getToken();
   console.log("🚀 ~ file: agregar.js:6 ~ agregarProductoForm ~ token:", token);
-  const data = await axios.post(
-    urlsv + "/api/productos/agregar",
-    {
-      nombre,
-      cantidad,
-      tipo,
-    },
-    { headers: { token: token.token } }
-  );
-  console.log("🚀 ~ file: agregar.js:30 ~ agregarProductoForm ~ data:", data);
+  try {
+    const data = await axios.post(
+      urlsv + "/api/productos/agregar",
+      {
+        nombre,
+        cantidad,
+        tipo,
+      },
+      { headers: { token: token.token } }
+    );
+    const toastLiveExample = document.getElementById("liveToast");
+
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+  } catch (error) {
+    console.log(error.response.data);
+    if (error.response.data.mensaje) {
+      console.log(error.response.data.mensaje);
+      return alerta.alert("Error servidor", error.response.data.mensaje);
+    }
+  }
 };
 const tipoCantidad = () => {
   const cantidadTipo = document.getElementById("cantidadTipoBtn");
@@ -43,3 +54,4 @@ const tipoCantidad = () => {
     cantidadValue.step = 1;
   }
 };
+const render = () => {};
