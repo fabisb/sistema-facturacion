@@ -8,4 +8,5 @@ router.post("/agregar",verifyToken,agregarController );
 router.patch("/editar",verifyToken,editarController );
 
 router.get('/idProducto',verifyToken,idProductoController)
+router.get('/idTipoProducto',verifyToken,idTipoProductoController)
 export default router;

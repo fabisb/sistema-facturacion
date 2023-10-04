@@ -56,11 +56,47 @@ const tipoCantidad = () => {
 };
 
 const render = async () => {
-  var myModal = document.getElementById("exampleModal");
+  var myModal = document.getElementById("editarModal");
   var modal = new bootstrap.Modal(myModal);
   modal.show();
-  modal.hide();
-  myModal.addEventListener("hidden.bs.modal", function (event) {
-    // Aquí va el código a ejecutar cuando se dispara el evento de cerrar la ventana modal
-  });
+};
+
+const buscarEditado = async () => {
+  try {
+    axios.get(urlsv + "/productos/idProducto", {
+      params: {
+        nombre: "valor de consulta",
+        tipo: "valor de otro parámetro",
+      },
+    });
+    var myModal = document.getElementById("editarModal");
+
+    var modal = bootstrap.Modal.getInstance(myModal);
+    // Ocultar el modal
+    modal.hide();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const buscarPorTipo = async () => {
+  const tipo = document.getElementById("tipoProductoOptions").value;
+  console.log("🚀 ~ file: editar.js:85 ~ buscarPorTipo ~ tipo:", tipo);
+  if (tipo == "") {
+    console.log("Error falta algun dato");
+    return alerta.alert(
+      "Error al ingresar datos",
+      "Verifique los datos ingresados e intente nuevamente"
+    );
+  }
+
+  try {
+    axios.get(urlsv + "/productos/idTipoProducto", {
+      params: {
+        tipo,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

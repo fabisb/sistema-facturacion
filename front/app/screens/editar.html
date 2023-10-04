@@ -48,7 +48,12 @@
             class="form-control"
           />
           <span class="input-group-text"
-            ><button type="button" class="btn btn-outline-dark" onclick="tipoCantidad()" id="cantidadTipoBtn">
+            ><button
+              type="button"
+              class="btn btn-outline-dark"
+              onclick="tipoCantidad()"
+              id="cantidadTipoBtn"
+            >
               Unidad
             </button></span
           >
@@ -58,23 +63,82 @@
         </div>
       </form>
     </div>
-    
+
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="liveToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <div
+        id="liveToast"
+        class="toast text-bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         <div class="toast-header">
           <strong class="me-auto">Producto</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
-        <div class="toast-body">
-          Producto agregado con exito!
-        </div>
+        <div class="toast-body">Producto agregado con exito!</div>
       </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      ...
+    <div
+      class="modal fade"
+      id="editarModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Producto a editar</h1>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <form>
+                <div class="my-2">
+                  <label for="tipoProductoList" class="form-label">Tipo de producto</label>
+             
+                  <select onselect="buscarPorTipo()" class="form-select" id="tipoProductoOptions">
+                    <option selected>tipo</option>
+
+                    <option value="Carnes">Carnes</option>
+                    <option value="Viveres">Viveres</option>
+                    <option value="Charcuteria">Charcuteria</option>
+                    <option value="Cosmeticos">Cosmeticos</option>
+                    <option value="Limpieza">Limpieza</option>
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <select class="form-select" id="selectProducto" aria-label="Default select example">
+                    <option selected>Producto</option>
+                    
+                  </select>
+                </div>
+                <div class="text-center my-2">
+                  <button type="submit" id="agregarBtn" class="btn-lg btn btn-primary">
+                    buscar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" onclick="buscarEditado()" class="btn btn-primary">
+              Understood
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    
 
     <script src="../javascript/editar.js"></script>
     <script src="../modules/axios.min.js"></script>
