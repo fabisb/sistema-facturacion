@@ -10,12 +10,10 @@ export const loginController = async (req, res, next) => {
     "SELECT id, nivel FROM users WHERE username = ? AND password = ?",
     [user, pass]
   );
-  console.log("🚀 ~ file: login.controller.js:13 ~ loginController ~ id:", id);
   if (id.length > 0) {
     var token = await jwt.sign({ id: id[0].id, user, nivel: id[0].nivel }, "secret", {
       expiresIn: "1 days",
     });
-    console.log("🚀 ~ file: login.controller.js:15 ~ loginController ~ token:", token);
 
     return res.status(200).json({ token, user });
   } else {

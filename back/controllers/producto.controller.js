@@ -77,7 +77,7 @@ export const editarController = async (req, res) => {
 
 export const idProductoController = async (req,res)=>{
   console.log('idProductoController')
-  const producto = req.query;
+  const {producto} = req.query;
   console.log("🚀 ~ file: producto.controller.js:80 ~ idProducto ~  id:",  producto);
   const [id] = await pool.execute('SELECT id FROM productos WHERE nombre = ? AND tipo = ?',[producto.nombre,producto.tipo])
   console.log("🚀 ~ file: producto.controller.js:83 ~ idProductoController ~ id:", id)
@@ -87,7 +87,7 @@ export const idProductoController = async (req,res)=>{
 export const idTipoProductoController = async (req,res)=>{
   console.log('idProductoController')
   const {tipo }= req.query;
-  console.log("🚀 ~ file: producto.controller.js:90 ~ idTipoProductoController ~  req.query:",  req.query)
+  console.log("🚀 ~ file: producto.controller.js:90 ~ idTipoProductoController ~ req.query:", req.query)
   const [productos] = await pool.execute('SELECT * FROM productos WHERE tipo = ?',[tipo])
   console.log("🚀 ~ file: producto.controller.js:92 ~ idTipoProductoController ~ productos:", productos)
   return await res.status(200).json(productos); 

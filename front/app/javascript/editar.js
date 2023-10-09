@@ -63,11 +63,15 @@ const render = async () => {
 
 const buscarEditado = async () => {
   try {
-    axios.get(urlsv + "/productos/idProducto", {
+    const token = await login.getToken();
+
+    axios.get(urlsv + "/api/productos/idProducto", {
       params: {
         nombre: "valor de consulta",
         tipo: "valor de otro parámetro",
       },
+      headers: { token: token.token }
+      
     });
     var myModal = document.getElementById("editarModal");
 
@@ -80,9 +84,9 @@ const buscarEditado = async () => {
 };
 
 const buscarPorTipo = async () => {
-  const tipo = document.getElementById("tipoProductoOptions").value;
+  const tipo = document.getElementById("tipoProductoOptionsBuscar").value;
   console.log("🚀 ~ file: editar.js:85 ~ buscarPorTipo ~ tipo:", tipo);
-  if (tipo == "") {
+  if (tipo == "" || !tipo) {
     console.log("Error falta algun dato");
     return alerta.alert(
       "Error al ingresar datos",
@@ -91,11 +95,15 @@ const buscarPorTipo = async () => {
   }
 
   try {
-    axios.get(urlsv + "/productos/idTipoProducto", {
+    const token = await login.getToken();
+
+    const idTipo = await axios.get(urlsv + "/api/productos/idTipoProducto", {
       params: {
         tipo,
       },
+      headers: { token: token.token }
     });
+    console.log("🚀 ~ file: editar.js:99 ~ buscarPorTipo ~ idTipo :", idTipo )
   } catch (error) {
     console.log(error);
   }
