@@ -40,6 +40,7 @@ export const agregarController = async (req, res) => {
 export const editarController = async (req, res) => {
   console.log("editarController");
   const { nombre, tipo, cantidad } = req.body;
+  console.log("🚀 ~ file: producto.controller.js:43 ~ editarController ~ req.body:", req.body)
 
   if (nombre == "" || cantidad == "" || cantidad == 0 || tipo == "") {
     console.log("Error falta algun dato");
@@ -77,11 +78,11 @@ export const editarController = async (req, res) => {
 
 export const idProductoController = async (req,res)=>{
   console.log('idProductoController')
-  const {producto} = req.query;
-  console.log("🚀 ~ file: producto.controller.js:80 ~ idProducto ~  id:",  producto);
-  const [id] = await pool.execute('SELECT id FROM productos WHERE nombre = ? AND tipo = ?',[producto.nombre,producto.tipo])
-  console.log("🚀 ~ file: producto.controller.js:83 ~ idProductoController ~ id:", id)
-  return await res.status(200).json(id); 
+  const {id} = req.query;
+  const [idProducto] = await pool.execute('SELECT * FROM productos WHERE id = ?',[id]);
+  const [CantidadProducto] = await pool.execute('SELECT * FROM productos WHERE id = ?',[id]);
+  console.log("🚀 ~ file: producto.controller.js:83 ~ idProductoController ~ idProducto:", idProducto)
+  return await res.status(200).json(idProducto[0]); 
 } 
 
 export const idTipoProductoController = async (req,res)=>{

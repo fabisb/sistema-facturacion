@@ -16,7 +16,6 @@ const editarProductoForm = async () => {
     );
   }
   const token = await login.getToken();
-  console.log("🚀 ~ file: editar.js:6 ~ editarProductoForm ~ token:", token);
   try {
     const data = await axios.post(
       urlsv + "/api/productos/editar",
@@ -61,20 +60,22 @@ const render = async () => {
   modal.show();
 };
 
-const buscarEditado = async () => {
+const buscarParaEditar = async () => {
+  const id = document.getElementById("selectProducto").value;
   try {
     const token = await login.getToken();
 
-    axios.get(urlsv + "/api/productos/idProducto", {
+    const { data: producto } = await axios.get(urlsv + "/api/productos/idProducto", {
       params: {
-        nombre: "valor de consulta",
-        tipo: "valor de otro parámetro",
+        id,
       },
-      headers: { token: token.token }
-      
+      headers: { token: token.token },
     });
+    const selectsTipo = [...document.getElementById("tipoProductoOptions").children];
+    document.getElementById("nombreForm").value = producto.nombre;
+    const tipoSelect = selectsTipo.find((tipo) => tipo.value == producto.tipo);
+    tipoSelect.setAttribute('selected','true')
     var myModal = document.getElementById("editarModal");
-
     var modal = bootstrap.Modal.getInstance(myModal);
     // Ocultar el modal
     modal.hide();
@@ -85,7 +86,6 @@ const buscarEditado = async () => {
 
 const buscarPorTipo = async () => {
   const tipo = document.getElementById("tipoProductoOptionsBuscar").value;
-  console.log("🚀 ~ file: editar.js:85 ~ buscarPorTipo ~ tipo:", tipo);
   if (tipo == "" || !tipo) {
     console.log("Error falta algun dato");
     return alerta.alert(
@@ -97,13 +97,16 @@ const buscarPorTipo = async () => {
   try {
     const token = await login.getToken();
 
-    const idTipo = await axios.get(urlsv + "/api/productos/idTipoProducto", {
+    const { data: idTipo } = await axios.get(urlsv + "/api/productos/idTipoProducto", {
       params: {
         tipo,
       },
-      headers: { token: token.token }
+      headers: { token: token.token },
     });
-    console.log("🚀 ~ file: editar.js:99 ~ buscarPorTipo ~ idTipo :", idTipo )
+    const selectsTipo = idTipo
+      .map((tipo) => `<option value='${tipo.id}'>${tipo.nombre}</option>`)
+      .join("");
+    document.getElementById("selectProducto").innerHTML = selectsTipo;
   } catch (error) {
     console.log(error);
   }

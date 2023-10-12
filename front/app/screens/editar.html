@@ -13,19 +13,15 @@
       <form onsubmit="event.preventDefault(),editarProductoForm()">
         <div class="my-2">
           <label for="tipoProductoList" class="form-label">Tipo de producto</label>
-          <input
-            class="form-control"
-            list="tipoProductoOptions"
-            id="tipoProductoList"
-            placeholder="Escribe un tipo de producto..."
-          />
-          <datalist id="tipoProductoOptions">
-            <option value="Carnes"></option>
-            <option value="Viveres"></option>
-            <option value="Charcuteria"></option>
-            <option value="Cosmeticos"></option>
-            <option value="Limpieza"></option>
-          </datalist>
+          
+          <select class="form-select" id="tipoProductoOptions">
+            <option value="Carnes">Carnes</option>
+            <option value="Viveres">Viveres</option>
+            <option value="Charcuteria">Charcuteria</option>
+            <option value="Cosmeticos">Cosmeticos</option>
+            <option value="Limpieza">Limpieza</option>
+          </select>
+          
         </div>
 
         <div class="input-group">
@@ -124,17 +120,12 @@
                   </select>
                 </div>
                 <div class="text-center my-2">
-                  <button type="submit" id="agregarBtn" class="btn-lg btn btn-primary">
-                    buscar
+                  <button onclick="buscarParaEditar()" type="button" id="agregarBtn" class="btn-lg btn btn-primary">
+                    Editar
                   </button>
                 </div>
               </form>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" onclick="buscarEditado()" class="btn btn-primary">
-              Understood
-            </button>
           </div>
         </div>
       </div>
