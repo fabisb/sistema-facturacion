@@ -1,8 +1,13 @@
 const editarProductoForm = async () => {
-  const nombre = document.getElementById("nombreForm").value;
+  const nombre = document.getElementById("nombreForm");
+  const idExistente = nombre.getAttribute('idProducto');
+  console.log("🚀 ~ file: editar.js:4 ~ editarProductoForm ~ idExistente:", idExistente)
+  console.log("🚀 ~ file: editar.js:3 ~ editarProductoForm ~ nombre:", nombre.value);
   const cantidad = document.getElementById("cantidadForm").value;
-  const tipo = document.getElementById("tipoProductoList").value;
-  if (nombre == "" || cantidad == "" || cantidad == 0 || tipo == "") {
+  console.log("🚀 ~ file: editar.js:5 ~ editarProductoForm ~ cantidad:", cantidad);
+  const tipo = document.getElementById("tipoProductoOptions").value;
+  console.log("🚀 ~ file: editar.js:5 ~ editarProductoForm ~ tipo:", tipo);
+  if (nombre.value == "" || cantidad == "" || cantidad == 0 || tipo == "") {
     console.log("Error falta algun dato");
     return alerta.alert(
       "Error al ingresar datos",
@@ -17,15 +22,17 @@ const editarProductoForm = async () => {
   }
   const token = await login.getToken();
   try {
-    const data = await axios.post(
+    const data = await axios.patch(
       urlsv + "/api/productos/editar",
       {
-        nombre,
+        nombre: nombre.value,
         cantidad,
         tipo,
+        idExistente
       },
       { headers: { token: token.token } }
     );
+    console.log("🚀 ~ file: editar.js:29 ~ editarProductoForm ~ data:", data);
     const toastLiveExample = document.getElementById("liveToast");
 
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
@@ -72,9 +79,22 @@ const buscarParaEditar = async () => {
       headers: { token: token.token },
     });
     const selectsTipo = [...document.getElementById("tipoProductoOptions").children];
-    document.getElementById("nombreForm").value = producto.nombre;
-    const tipoSelect = selectsTipo.find((tipo) => tipo.value == producto.tipo);
-    tipoSelect.setAttribute('selected','true')
+    document.getElementById("nombreForm").value = producto.producto.nombre;
+    document.getElementById("nombreForm").setAttribute('idProducto',producto.producto.id);
+    document.getElementById("cantidadForm").value = producto.cantidad;
+    const tipoSelect = selectsTipo.find((tipo) => tipo.value == producto.producto.tipo);
+    tipoSelect.setAttribute("selected", "true");
+    const cantidadTipo = document.getElementById("cantidadTipoBtn");
+    const cantidadValue = document.getElementById("cantidadForm");
+    if (producto.cantidad % 0.5 == 0) {
+      cantidadTipo.innerText = "Decimal";
+      cantidadValue.value = producto.cantidad;
+      cantidadValue.step = 0.01;
+    } else {
+      cantidadValue.value = producto.cantidad;
+      cantidadTipo.innerText = "Unidad";
+      cantidadValue.step = 1;
+    }
     var myModal = document.getElementById("editarModal");
     var modal = bootstrap.Modal.getInstance(myModal);
     // Ocultar el modal
