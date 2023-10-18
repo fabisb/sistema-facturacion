@@ -51,11 +51,9 @@ const tipoCantidad = () => {
   const cantidadValue = document.getElementById("cantidadForm");
   console.log(cantidadValue.step);
   if (tipo == "Unidad") {
-    cantidadValue.value = 0;
     cantidadTipo.innerText = "Decimal";
     cantidadValue.step = 0.01;
   } else {
-    cantidadValue.value = 0;
     cantidadTipo.innerText = "Unidad";
     cantidadValue.step = 1;
   }

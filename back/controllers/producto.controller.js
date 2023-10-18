@@ -95,10 +95,6 @@ export const idProductoController = async (req, res) => {
       "SELECT * FROM cantidad_producto WHERE id_producto = ?",
       [id]
     );
-    console.log(
-      "🚀 ~ file: producto.controller.js:83 ~ idProductoController ~ idProducto:",
-      idProducto
-    );
     return await res
       .status(200)
       .json({ producto: idProducto[0], cantidad: cantidadProducto[0].cantidad });
