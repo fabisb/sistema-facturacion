@@ -26,11 +26,45 @@ export const productosController = async (req, res) => {
         }
       }
       // Mostramos el resultado por consola
-      console.log("🚀 ~ file: factura.controller.js:30 ~ productosController ~ productosUnidos:", productosUnidos)
+      console.log(
+        "🚀 ~ file: factura.controller.js:30 ~ productosController ~ productosUnidos:",
+        productosUnidos
+      );
 
       return await res.status(200).json(productosUnidos);
     }
   } else {
     return await res.stauts(402).json({ mensaje: "No se han encontrado productos" });
+  }
+};
+
+export const facturarController = async (req, res) => {
+  const { ticket } = req.body;
+  const username = req.user;
+  console.log("🚀 ~ file: factura.controller.js:41 ~ facturarController ~ username :", username);
+  if (!ticket) {
+    return await res.status(402).json({ mensaje: "No se ha encontrado ticket" });
+  }
+  try {
+    const [factura] = await pool.execute("INSERT INTO factura SET ?", {
+      monto: ticket.monto,
+      moneda: ticket.moneda,
+      id_usuario: username.id,
+      cliente: ticket.cliente,
+    });
+
+    const ticketDetalle = ticket.detalle.map((item) => [
+      item.id_producto,
+      item.cantidad,
+      factura.insertId,
+      item.precio,
+      item.total,
+    ]);
+    const [detalleFactura] = await pool.execute(
+      "INSERT INTO detalle_factura (id_producto,cantidad,id_factura,precio,total) VALUES ?",
+      ticketDetalle
+    );
+  } catch (error) {
+    console.log("🚀 ~ file: factura.controller.js:69 ~ facturarController ~ error:", error);
   }
 };

@@ -28,6 +28,8 @@ const {token}=req.headers;
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
+      console.log("🚀 ~ file: login.controller.js:31 ~ verifyToken ~ decoded:", decoded)
+      req.user = decoded
       next();
     }
   } catch (err) {
