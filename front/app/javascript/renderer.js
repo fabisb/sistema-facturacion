@@ -6,8 +6,14 @@
  * to expose Node.js functionality from the main process.
  */
 
-function renderer() {
-  //document.getElementById("isLog").hidden = true;
+async function renderer() {
+  const token = await login.getToken();
+  console.log("🚀 ~ file: renderer.js:12 ~ renderer ~ token:", token)
+  if (token) {
+    document.getElementById("isLog").hidden = false;
+  document.getElementById("login").hidden = true;
+
+  }
 }
 
 async function loguear(e) {

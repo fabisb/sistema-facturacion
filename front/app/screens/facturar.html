@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
   </head>
-  <body>
+  <body onload="listRenderer()">
     <header class="mx-2 my-1">
-      <h2>Sistema de Facturacion</h2>
+      <h2 style="cursor: pointer;" onclick="ventanas.mainWindow()">Sistema de Facturacion</h2>
     </header>
     <main class="container">
       <div class="text-center">
         <div class="row">
           <div class="bg-warning col-8">
+            <form onsubmit="event.preventDefault(), agregarProducto()">
             <label for="busquedaProducto" class="form-label">Buscar</label>
             <input
               class="form-control"
               list="productoOption"
               id="busquedaProducto"
-              placeholder="Harina pan..."   
-            />
-            <datalist id="productoOption">
-              <option value="San Francisco"></option>
+              placeholder="Harina pan..."
               
+            />
+            <datalist  id="productoOption">
+              <option >ejemplo</option>
             </datalist>
+          </form>
           </div>
           <div class="col-4 bg-danger-subtle">2 of 2</div>
         </div>

@@ -13,8 +13,31 @@ if (env === "development") {
   });
 }
 const store = new Store();
+const productos = new Store();
+store.clear();
+productos.clear();
 
-ipcMain.on("token",async  (event, token) => {
+ipcMain.on("setTicketProducto", async (event, producto) => {
+  const productoStorage = productos.get("productos");
+  console.log("🚀 ~ file: main.js:22 ~ ipcMain.on ~ productoStorage:", productoStorage);
+  if (productoStorage.length !== 0) {
+    await store.set("productos", producto);
+  } else {
+    const productosExistenteStorage = await store.get("productos", productos);
+    console.log(
+      "🚀 ~ file: main.js:27 ~ ipcMain.on ~ productosExistenteStorage:",
+      productosExistenteStorage
+    );
+    productosExistenteStorage.push(producto);
+    await store.set("productos", productosExistenteStorage);
+  }
+});
+ipcMain.on("getTicketProducto", async (event, producto) => {
+  const productoStorage = productos.get("productos");
+  console.log("🚀 ~ file: main.js:37 ~ ipcMain.on ~ productoStorage:", productoStorage);
+  return productoStorage;
+});
+ipcMain.on("token", async (event, token) => {
   store.clear();
   await store.set("token", token);
 });
@@ -96,6 +119,7 @@ ipcMain.handle("facturarWindow", () => facturarWindow());
 ipcMain.handle("editarWindow", () => editarWindow());
 ipcMain.handle("agregarWindow", () => agregarWindow());
 ipcMain.handle("consultarWindow", () => consultarWindow());
+ipcMain.handle("createWindow", () => createWindow());
 
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();

@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("ventanas", {
   agregarWindow: async () => await ipcRenderer.invoke("agregarWindow"),
   consultarWindow: async () => await ipcRenderer.invoke("consultarWindow"),
   editarWindow: async () => await ipcRenderer.invoke("editarWindow"),
+  mainWindow: async () => await ipcRenderer.invoke("createWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
 contextBridge.exposeInMainWorld("login", {
@@ -23,6 +24,18 @@ contextBridge.exposeInMainWorld("login", {
   },
   storeToken: async (token) => {
     await ipcRenderer.send("token", token);
+    return;
+  },
+  getToken: async () => await ipcRenderer.invoke("getToken"),
+});
+contextBridge.exposeInMainWorld("ticket", {
+  store: async (producto) => {
+    const result = ipcRenderer.sendSync("setTicketProducto", producto);
+    console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
+    return result;
+  },
+  getStore: async (key) => {
+    await ipcRenderer.send("getTicketProducto", key);
     return;
   },
   getToken: async () => await ipcRenderer.invoke("getToken"),
