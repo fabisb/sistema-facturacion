@@ -14,14 +14,17 @@ if (env === "development") {
 }
 const store = new Store();
 const productos = new Store();
+//productos.set("productos", []);
+const existenciaStore = new Store();
 store.clear();
 productos.clear();
+existenciaStore.clear();
 
 ipcMain.on("setTicketProducto", async (event, producto) => {
   const productoStorage = productos.get("productos");
   console.log("🚀 ~ file: main.js:22 ~ ipcMain.on ~ productoStorage:", productoStorage);
-  if (productoStorage.length !== 0) {
-    await store.set("productos", producto);
+  if (!productoStorage) {
+    await store.set("productos", [producto]);
   } else {
     const productosExistenteStorage = await store.get("productos", productos);
     console.log(
@@ -32,10 +35,19 @@ ipcMain.on("setTicketProducto", async (event, producto) => {
     await store.set("productos", productosExistenteStorage);
   }
 });
-ipcMain.on("getTicketProducto", async (event, producto) => {
+ipcMain.handle("getTicketProducto", async (event, producto) => {
   const productoStorage = productos.get("productos");
   console.log("🚀 ~ file: main.js:37 ~ ipcMain.on ~ productoStorage:", productoStorage);
   return productoStorage;
+});
+ipcMain.on("setExistencia", async (event, existencia) => {
+  console.log("🚀 ~ file: main.js:41 ~ ipcMain.on ~ existencia:", existencia);
+  await existenciaStore.set("existencia", existencia);
+});
+ipcMain.handle("getExistencia", async (event, producto) => {
+  const existenciaStorage = existenciaStore.get("existencia");
+  console.log("🚀 ~ file: main.js:42 ~ ipcMain.on ~ existenciaStorage:", existenciaStorage);
+  return existenciaStorage;
 });
 ipcMain.on("token", async (event, token) => {
   store.clear();

@@ -30,15 +30,17 @@ contextBridge.exposeInMainWorld("login", {
 });
 contextBridge.exposeInMainWorld("ticket", {
   store: async (producto) => {
-    const result = ipcRenderer.sendSync("setTicketProducto", producto);
+    const result = await ipcRenderer.send("setTicketProducto", producto);
     console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
     return result;
   },
-  getStore: async (key) => {
-    await ipcRenderer.send("getTicketProducto", key);
-    return;
+  getStore: async (key) => await ipcRenderer.invoke("getTicketProducto", key),
+  storeExistencia: async (existencia) => {
+    const result = await ipcRenderer.send("setExistencia", existencia);
+    console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
+    return result;
   },
-  getToken: async () => await ipcRenderer.invoke("getToken"),
+  getExistencia: async () => await ipcRenderer.invoke("getExistencia"),
 });
 
 contextBridge.exposeInMainWorld("alerta", {
