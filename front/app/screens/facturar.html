@@ -14,19 +14,38 @@
         <div class="row">
           <div class="bg-warning col-8">
             <form onsubmit="event.preventDefault(), agregarProducto()">
-              <label for="busquedaProducto" class="form-label">Buscar</label>
+              <div class="input-group">
+                <span for="busquedaProducto" class="input-group-text">Buscar</span>
+
               <input
                 class="form-control"
                 list="productoOption"
                 id="busquedaProducto"
                 placeholder="Harina pan..."
+                required
               />
               <datalist id="productoOption">
                 <option>ejemplo</option>
               </datalist>
+                <input
+                  type="number"
+                  min="0"
+                  required
+                  class="form-control"
+                  placeholder="Cantidad a llevar"
+                  aria-label="Cantidad a llevar"
+                  aria-describedby="cantindadBtn"
+                  id="cantidadProducto"
+                />
+                <button class="btn btn-success" type="submit">
+                  Agregar 
+                </button>
+              </div>
             </form>
           </div>
-          <div class="col-4 bg-danger-subtle">2 of 2</div>
+          <div class="col-4 bg-danger-subtle ">
+             2
+          </div>
         </div>
       </div>
     </main>
