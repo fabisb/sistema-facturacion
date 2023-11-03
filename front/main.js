@@ -35,11 +35,15 @@ ipcMain.on("setTicketProducto", async (event, producto) => {
       (existente) => existente.id === producto.id
     );
     console.log("🚀 ~ file: main.js:36 ~ ipcMain.on ~ existeIndex:", existeIndex);
-    if (existeIndex || existeIndex != -1) {
+    if (existeIndex != -1) {
       const llevaNuevo =
-        parseFloat(productoStorage[existeIndex].lleva) + parseFloat(producto.lleva);
+        parseFloat(productosExistenteStorage[existeIndex].lleva) + parseFloat(producto.lleva);
       console.log("🚀 ~ file: main.js:40 ~ ipcMain.on ~ llevaNuevo:", llevaNuevo);
-      productoStorage[existeIndex].lleva = llevaNuevo;
+      productosExistenteStorage[existeIndex].lleva = llevaNuevo;
+      console.log(
+        "🚀 ~ file: main.js:43 ~ ipcMain.on ~ productoStorage[existeIndex].lleva:",
+        productosExistenteStorage[existeIndex]
+      );
     } else {
       productosExistenteStorage.push(producto);
     }
