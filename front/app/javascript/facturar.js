@@ -33,10 +33,7 @@ const agregarProducto = async () => {
   const existencias = await ticket.getExistencia();
   if (existencias) {
     const producoExistente = existencias.find((el, i) => el.nombre == productoAgregar);
-    console.log(
-      "🚀 ~ file: facturar.js:32 ~ agregarProducto ~ producoExistente:",
-      producoExistente
-    );
+
     if (!producoExistente) {
       const errorAlert = document.getElementById("errorAlert");
 
