@@ -2,14 +2,28 @@ import { pool } from "../database/db.js";
 
 export const agregarController = async (req, res) => {
   console.log("AgregarController");
-  const { nombre, tipo, cantidad } = req.body;
+  const { nombre, tipo, cantidad, metrica, precio } = req.body;
 
-  if (nombre == "" || cantidad == "" || cantidad == 0 || tipo == "") {
+  if (
+    nombre == "" ||
+    cantidad == "" ||
+    cantidad == 0 ||
+    tipo == "" ||
+    metrica == "" ||
+    precio == 0 ||
+    precio == ""
+  ) {
     console.log("Error falta algun dato");
     return await res.status(400).json({ mensaje: "Error falta algun dato" });
   } else if (isNaN(cantidad)) {
     console.log("Error tipo de dato");
     return await res.status(400).json({ mensaje: "Error tipo de dato" });
+  } else if (isNaN(precio)) {
+    console.log("Error tipo de dato");
+    return alerta.alert(
+      "Error al ingresar datos",
+      "Verifique los tipos de datos ingresados e intente nuevamente"
+    );
   }
   const [existencia] = await pool.execute(
     "SELECT nombre, tipo FROM productos WHERE nombre = ? AND tipo = ?",
@@ -21,18 +35,18 @@ export const agregarController = async (req, res) => {
       .status(405)
       .json({ mensaje: "Error ya se encontro un producto de igual nombre y tipo" });
   } else {
-    const [insertado] = await pool.execute("INSERT INTO productos (nombre, tipo) VALUES (?,?)", [
-      nombre,
-      tipo,
-    ]);
+    const [insertado] = await pool.execute(
+      "INSERT INTO productos (nombre, tipo, precio) VALUES (?,?,?)",
+      [nombre, tipo, precio]
+    );
     console.log(
       "🚀 ~ file: producto.controller.js:28 ~ agregarController ~ insertado:",
       insertado.insertId
     );
-    await pool.execute("INSERT INTO cantidad_producto (id_producto, cantidad) VALUES (?,?)", [
-      insertado.insertId,
-      cantidad,
-    ]);
+    await pool.execute(
+      "INSERT INTO cantidad_producto (id_producto, cantidad, metrica) VALUES (?,?,?)",
+      [insertado.insertId, cantidad, metrica]
+    );
     return await res.status(200).json({ mensaje: "Insertado exitoso" });
   }
 };
@@ -74,11 +88,11 @@ export const editarController = async (req, res) => {
       "UPDATE productos SET nombre = ?, tipo = ? WHERE id = ?",
       [nombre, tipo, idExistente]
     );
-    
-    const cantidadProducto = await pool.execute("UPDATE cantidad_producto SET cantidad = ? WHERE id_producto = ?", [
-      parseFloat(cantidad),
-      idExistente,
-    ]);
+
+    const cantidadProducto = await pool.execute(
+      "UPDATE cantidad_producto SET cantidad = ? WHERE id_producto = ?",
+      [parseFloat(cantidad), idExistente]
+    );
     return await res.status(200).json({ mensaje: "Actualizado exitoso" });
   } catch (error) {
     console.log(error);

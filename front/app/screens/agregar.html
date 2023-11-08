@@ -48,26 +48,59 @@
             class="form-control"
           />
           <span class="input-group-text"
-            ><button type="button" class="btn btn-outline-dark" onclick="tipoCantidad()" id="cantidadTipoBtn">
+            ><button
+              type="button"
+              class="btn btn-outline-dark"
+              onclick="tipoCantidad()"
+              id="cantidadTipoBtn"
+            >
               Unidad
             </button></span
           >
+        </div>
+        <div class="my-1"></div>
+        <div class="input-group">
+          <span class="input-group-text">Precio</span>
+          <input
+            id="precioForm"
+            class="form-control"
+            type="number"
+            min="0"
+            required
+            type="text"
+            placeholder="Precio del producto"
+          />
+          <span class="input-group-text">Metrica</span>
+          <select id="metricaSlct" class="form-select">
+            <option value="UND" selected>Unidad</option>
+            <option value="KG">Kilogramos</option>
+            <option value="GR">Gramos</option>
+          </select>
         </div>
         <div class="text-center my-2">
           <button type="submit" id="agregarBtn" class="btn-lg btn btn-success">Agregar</button>
         </div>
       </form>
     </div>
-    
+
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="liveToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <div
+        id="liveToast"
+        class="toast text-bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         <div class="toast-header">
           <strong class="me-auto">Producto</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
-        <div class="toast-body">
-          Producto agregado con exito!
-        </div>
+        <div class="toast-body">Producto agregado con exito!</div>
       </div>
     </div>
     <script src="../javascript/agregar.js"></script>

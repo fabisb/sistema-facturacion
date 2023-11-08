@@ -2,13 +2,29 @@ const agregarProductoForm = async () => {
   const nombre = document.getElementById("nombreForm").value;
   const cantidad = document.getElementById("cantidadForm").value;
   const tipo = document.getElementById("tipoProductoList").value;
-  if (nombre == "" || cantidad == "" || cantidad == 0 || tipo == "") {
+  const metrica = document.getElementById("metricaSlct").value;
+  const precio = document.getElementById("precioForm").value;
+  if (
+    nombre == "" ||
+    cantidad == "" ||
+    cantidad == 0 ||
+    tipo == "" ||
+    metrica == "" ||
+    precio == 0 ||
+    precio == ""
+  ) {
     console.log("Error falta algun dato");
     return alerta.alert(
       "Error al ingresar datos",
       "Verifique los datos ingresados e intente nuevamente"
     );
   } else if (isNaN(cantidad)) {
+    console.log("Error tipo de dato");
+    return alerta.alert(
+      "Error al ingresar datos",
+      "Verifique los tipos de datos ingresados e intente nuevamente"
+    );
+  } else if (isNaN(precio)) {
     console.log("Error tipo de dato");
     return alerta.alert(
       "Error al ingresar datos",
@@ -24,6 +40,8 @@ const agregarProductoForm = async () => {
         nombre,
         cantidad,
         tipo,
+        precio,
+        metrica,
       },
       { headers: { token: token.token } }
     );
