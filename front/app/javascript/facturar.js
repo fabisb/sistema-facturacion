@@ -49,9 +49,12 @@ const agregarProducto = async () => {
     const ticketActual = await ticket.getStore();
     console.log("🚀 ~ file: facturar.js:45 ~ agregarProducto ~ ticketActual:", ticketActual);
     const preliminarDiv = document.getElementById("preliminarTicket");
+    const sumaDetalles = []
+
     const ticketPre = ticketActual
-      .map(
-        (p) => `<div producto-id='${p.id}' class="card my-1">
+      .map((p) => {
+        sumaDetalles.push((p.precio*p.lleva).toFixed(2))
+        return `<div producto-id='${p.id}' class="card my-1">
     <div class="row g-0">
       <div class="col-md-4 text-center position-relative">
         <p class="position-absolute top-50 start-50 translate-middle fw-semibold">${p.lleva} ${p.metrica}</p>
@@ -65,11 +68,19 @@ const agregarProducto = async () => {
         </div>
       </div>
     </div>
-  </div>`
-      )
+  </div>`;
+      })
       .join("");
-    console.log("🚀 ~ file: facturar.js:71 ~ agregarProducto ~ ticketPre:", ticketPre);
     preliminarDiv.innerHTML = ticketPre;
-    
+    console.log("🚀 ~ file: facturar.js:53 ~ agregarProducto ~ sumaDetalles:", sumaDetalles)
+      
+    document.getElementsByName("totalBruto")[0].innerText;
+    document.getElementsByName("totalIva")[0].innerText;
+    document.getElementsByName("totalDescuento")[0].innerText;
+    document.getElementsByName("totalNeto")[0].innerText;
   }
+};
+
+const imprimirFactura = async () => {
+  console.log("imprimirFactura");
 };
