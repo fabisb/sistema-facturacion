@@ -49,11 +49,11 @@ const agregarProducto = async () => {
     const ticketActual = await ticket.getStore();
     console.log("🚀 ~ file: facturar.js:45 ~ agregarProducto ~ ticketActual:", ticketActual);
     const preliminarDiv = document.getElementById("preliminarTicket");
-    const sumaDetalles = []
+    let sumaDetalles = 0
 
     const ticketPre = ticketActual
       .map((p) => {
-        sumaDetalles.push((p.precio*p.lleva).toFixed(2))
+        sumaDetalles += (p.precio*p.lleva).toFixed(2)
         return `<div producto-id='${p.id}' class="card my-1">
     <div class="row g-0">
       <div class="col-md-4 text-center position-relative">
@@ -74,10 +74,10 @@ const agregarProducto = async () => {
     preliminarDiv.innerHTML = ticketPre;
     console.log("🚀 ~ file: facturar.js:53 ~ agregarProducto ~ sumaDetalles:", sumaDetalles)
       
-    document.getElementsByName("totalBruto")[0].innerText;
-    document.getElementsByName("totalIva")[0].innerText;
-    document.getElementsByName("totalDescuento")[0].innerText;
-    document.getElementsByName("totalNeto")[0].innerText;
+    document.getElementsByName("totalBruto")[0].innerText = parseFloat(sumaDetalles);
+    document.getElementsByName("totalIva")[0].innerText = parseFloat(sumaDetalles)* 0.16;
+    const descuento = parseFloat(  document.getElementsByName("totalDescuento")[0].value);
+    document.getElementsByName("totalNeto")[0].innerText = (parseFloat(sumaDetalles)  + (parseFloat(sumaDetalles) * 0.16) + descuento).toFixed(2);
   }
 };
 
