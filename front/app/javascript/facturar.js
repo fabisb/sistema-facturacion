@@ -78,6 +78,7 @@ const agregarProducto = async () => {
     document.getElementsByName("totalIva")[0].innerText = parseFloat(sumaDetalles)* 0.16;
     const descuento = parseFloat(  document.getElementsByName("totalDescuento")[0].value);
     document.getElementsByName("totalNeto")[0].innerText = (parseFloat(sumaDetalles)  + (parseFloat(sumaDetalles) * 0.16) + descuento).toFixed(2);
+  
   }
 };
 
