@@ -99,3 +99,63 @@ export const facturarController = async (req, res) => {
     console.error("🚀 ~ file: factura.controller.js:69 ~ facturarController ~ error:", error);
   }
 };
+
+export const agregarClienteController = async (req, res, next) => {
+  if (!req.cliente) {
+    const { ticket } = req.body;
+    const { cliente } = ticket;
+    if (
+      !cliente.nombre ||
+      !cliente.telefono ||
+      !cliente.direccion ||
+      isNaN(cliente.telefono) ||
+      !cliente.cedula ||
+      isNaN(cliente.cedula)
+    ) {
+      return await res.status(400).json({ mensaje: "Error en los datos del cliente" });
+    }
+    try {
+      await pool.execute("INSERT INTO cliente SET ?", {
+        cedula: cliente.cedula,
+        nombre: cliente.nombre,
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+      });
+      next();
+    } catch (error) {
+      console.log(error);
+      console.log(
+        "🚀 ~ file: factura.controller.js:120 ~ agregarClienteController ~ error:",
+        error
+      );
+    }
+  } else {
+    next();
+  }
+};
+
+export const verificarCliente = async (req, res, next) => {
+  const { ticket } = req.body;
+  const { cliente } = ticket;
+  if (
+    !cliente.nombre ||
+    !cliente.telefono ||
+    !cliente.direccion ||
+    isNaN(cliente.telefono) ||
+    !cliente.cedula ||
+    isNaN(cliente.cedula)
+  ) {
+    return await res.status(400).json({ mensaje: "Error en los datos del cliente" });
+  }
+  try {
+    const [cedula] = pool.execute("SELECT cedula FROM cliente WHERE cedula = ?", [cliente.cedula]);
+    if (cedula.length == 0) {
+      return await res.status(404).json({ mensaje: "No se ha encontrado cliente" });
+    } else {
+      return await res.status(200).json({ cedula: cedula[0].cedula });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log("🚀 ~ file: factura.controller.js:153 ~ verificarCliente ~ error:", error);
+  }
+};
