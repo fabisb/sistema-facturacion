@@ -45,13 +45,38 @@
                 <ul class="list-group list-group-flush">
                   <li name="totalBruto" class="list-group-item">Total Bruto: 0</li>
                   <li name="totalIva" class="list-group-item">IVA: 0</li>
-                  <li name="totalDescuento" class="list-group-item">Descuento: <input type="number" min="0"></li>
                 </ul>
                 <div class="card-footer" name="totalNeto">Total Neto: 0</div>
               </div>
               <div class=" mt-2 text-center" style="width: 42rem;">
 
-                <button type="button" onclick="imprimirFactura()" class="btn btn-primary text-center">Imprimir</button>
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Continuar
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Datos Cliente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input class="form-control" name="cedulaForm" type="number" min="0" placeholder="Cedula" >
+        <input class="form-control" name="nombreForm"  type="text" placeholder="Nombre">
+        <input class="form-control" name="telefonoForm"  type="number" min="0" placeholder="Telefono">
+        <input class="form-control" name="direccionForm" type="text" placeholder="Direcion" >
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button onclick="imprimirFactura()" type="button" class="btn btn-success">Imprimir</button>
+      </div>
+    </div>
+  </div>
+</div>
               </div>
 
             </div>

@@ -49,11 +49,11 @@ const agregarProducto = async () => {
     const ticketActual = await ticket.getStore();
     console.log("🚀 ~ file: facturar.js:45 ~ agregarProducto ~ ticketActual:", ticketActual);
     const preliminarDiv = document.getElementById("preliminarTicket");
-    let sumaDetalles = 0
+    let sumaDetalles = 0;
 
     const ticketPre = ticketActual
       .map((p) => {
-        sumaDetalles += (p.precio*p.lleva).toFixed(2)
+        sumaDetalles += (p.precio * p.lleva).toFixed(2);
         return `<div producto-id='${p.id}' class="card my-1">
     <div class="row g-0">
       <div class="col-md-4 text-center position-relative">
@@ -72,16 +72,59 @@ const agregarProducto = async () => {
       })
       .join("");
     preliminarDiv.innerHTML = ticketPre;
-    console.log("🚀 ~ file: facturar.js:53 ~ agregarProducto ~ sumaDetalles:", sumaDetalles)
-      
-    document.getElementsByName("totalBruto")[0].innerText = parseFloat(sumaDetalles);
-    document.getElementsByName("totalIva")[0].innerText = parseFloat(sumaDetalles)* 0.16;
-    const descuento = parseFloat(  document.getElementsByName("totalDescuento")[0].value);
-    document.getElementsByName("totalNeto")[0].innerText = (parseFloat(sumaDetalles)  + (parseFloat(sumaDetalles) * 0.16) + descuento).toFixed(2);
-  
+    console.log("🚀 ~ file: facturar.js:53 ~ agregarProducto ~ sumaDetalles:", sumaDetalles);
+
+    document.getElementsByName("totalBruto")[0].innerText =
+      "Total Bruto: " + parseFloat(sumaDetalles).toFixed(2) + " Bs";
+    document.getElementsByName("totalIva")[0].innerText =
+      "IVA (16%): " + (parseFloat(sumaDetalles) * 0.16).toFixed(2) + " Bs";
+    document.getElementsByName("totalNeto")[0].innerText =
+      "Total Neto: " +
+      (parseFloat(sumaDetalles) + parseFloat(sumaDetalles) * 0.16).toFixed(2) +
+      " Bs";
   }
 };
 
 const imprimirFactura = async () => {
   console.log("imprimirFactura");
+
+  const cedula = document.getElementsByName("cedulaForm")[0].value;
+  const nombre = document.getElementsByName("nombreForm")[0].value;
+  const direccion = document.getElementsByName("direccionForm")[0].value;
+  const telefono = document.getElementsByName("telefonoForm")[0].value;
+
+  if (!cedula || !nombre || !direccion || !telefono) {
+    return alerta.alert("ERROR", "Error al ingresar datos");
+  }
+  try {
+    const ticketActual = await ticket.getStore();
+    const token = await login.getToken();
+
+    if (ticketActual.length == 0) {
+      return alerta.alert("ERROR", "No hay productos agregados");
+    }
+    let total = 0;
+    ticketActual.forEach((tk) => {
+      total += parseFloat(tk.lleva).toFixed(0) * parseFloat(tk.precio).toFixed(2);
+    });
+    const factura = {
+      detalle: ticketActual,
+      cliente: { cedula, nombre, direccion, telefono },
+      monto: total,
+      moneda: "Bs",
+    };
+
+    const { data } = await axios.post(
+      urlsv + "/api/factura/crear",
+      {
+        ticket: factura,
+      },
+      {
+        headers: { token: token.token },
+      }
+    );
+    console.log("🚀 ~ file: facturar.js:122 ~ imprimirFactura ~ data:", data);
+  } catch (error) {
+    console.log(error);
+  }
 };

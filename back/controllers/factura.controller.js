@@ -40,6 +40,7 @@ export const productosController = async (req, res) => {
 
 export const facturarController = async (req, res) => {
   const { ticket } = req.body;
+  const { cliente } = ticket;
   const username = req.user;
   console.log("🚀 ~ file: factura.controller.js:41 ~ facturarController ~ username :", username);
   if (!ticket) {
@@ -54,12 +55,8 @@ export const facturarController = async (req, res) => {
       console.log("Error en detalle id_producto");
       return;
     }
-    if (ele.cantidad < 0 || !ele.cantidad) {
+    if (ele.lleva < 0 || !ele.lleva) {
       console.log("Error en detalle cantidad");
-      return;
-    }
-    if (ele.total < 0 || !ele.total) {
-      console.log("Error en detalle total");
       return;
     }
   });
@@ -69,26 +66,22 @@ export const facturarController = async (req, res) => {
       .json({ mensaje: "Hay un error de dato en alguno de los detalles" });
   }
   try {
-    const [factura] = await pool.execute("INSERT INTO factura SET ?", {
-      monto: ticket.monto,
-      moneda: ticket.moneda,
-      id_usuario: username.id,
-      cliente: ticket.cliente,
-    });
+    const [factura] = await pool.execute(
+      "INSERT INTO factura(monto, moneda, id_usuario, cliente) VALUES (?,?,?,?)",
+      [ticket.monto, ticket.moneda, username.id, cliente.cedula]
+    );
     if (!factura.insertId) {
       return await res.status(500).json({ mensaje: "Error al ingresar a la base de datos" });
     }
 
-    const ticketDetalle = ticket.detalle.map((item) => [
-      item.id_producto,
-      item.cantidad,
-      factura.insertId,
-      item.precio,
-      item.total,
-    ]);
-    const [detalleFactura] = await pool.execute(
-      "INSERT INTO detalle_factura (id_producto,cantidad,id_factura,precio,total) VALUES ?",
-      ticketDetalle
+    const ticketDetalle = ticket.detalle.map((item) => {
+      const total = parseFloat(item.lleva).toFixed(0) * parseFloat(item.precio).toFixed(2);
+      console.log("🚀 ~ file: factura.controller.js:84 ~ ticketDetalle ~ total:", total);
+      return [item.id_producto, item.lleva, factura.insertId, item.precio, total];
+    });
+    const [detalleFactura] = await pool.query(
+      "INSERT INTO detalle_factura (id_producto, cantidad, id_factura, precio, total) VALUES ?",
+      [ticketDetalle]
     );
     console.log(
       "🚀 ~ file: factura.controller.js:93 ~ facturarController ~ detalleFactura:",
@@ -101,42 +94,12 @@ export const facturarController = async (req, res) => {
 };
 
 export const agregarClienteController = async (req, res, next) => {
-  if (!req.cliente) {
-    const { ticket } = req.body;
-    const { cliente } = ticket;
-    if (
-      !cliente.nombre ||
-      !cliente.telefono ||
-      !cliente.direccion ||
-      isNaN(cliente.telefono) ||
-      !cliente.cedula ||
-      isNaN(cliente.cedula)
-    ) {
-      return await res.status(400).json({ mensaje: "Error en los datos del cliente" });
-    }
-    try {
-      await pool.execute("INSERT INTO cliente SET ?", {
-        cedula: cliente.cedula,
-        nombre: cliente.nombre,
-        telefono: cliente.telefono,
-        direccion: cliente.direccion,
-      });
-      next();
-    } catch (error) {
-      console.log(error);
-      console.log(
-        "🚀 ~ file: factura.controller.js:120 ~ agregarClienteController ~ error:",
-        error
-      );
-    }
-  } else {
-    next();
-  }
-};
-
-export const verificarCliente = async (req, res, next) => {
   const { ticket } = req.body;
   const { cliente } = ticket;
+  console.log(
+    "🚀 ~ file: factura.controller.js:101 ~ agregarClienteController ~ cliente:",
+    cliente
+  );
   if (
     !cliente.nombre ||
     !cliente.telefono ||
@@ -148,14 +111,13 @@ export const verificarCliente = async (req, res, next) => {
     return await res.status(400).json({ mensaje: "Error en los datos del cliente" });
   }
   try {
-    const [cedula] = pool.execute("SELECT cedula FROM cliente WHERE cedula = ?", [cliente.cedula]);
-    if (cedula.length == 0) {
-      return await res.status(404).json({ mensaje: "No se ha encontrado cliente" });
-    } else {
-      return await res.status(200).json({ cedula: cedula[0].cedula });
-    }
+    await pool.execute(
+      "INSERT IGNORE INTO cliente(cedula, nombre, telefono, direccion) VALUES (?,?,?,?)",
+      [cliente.cedula, cliente.nombre, cliente.telefono, cliente.direccion]
+    );
+    next();
   } catch (error) {
     console.log(error);
-    console.log("🚀 ~ file: factura.controller.js:153 ~ verificarCliente ~ error:", error);
+    console.log("🚀 ~ file: factura.controller.js:120 ~ agregarClienteController ~ error:", error);
   }
 };

@@ -6,4 +6,5 @@ export const pool = await createPool({
   port: 3306,
   waitForConnections: true,
   timezone: "America/Caracas",
+  namedPlaceholders:true
 });
