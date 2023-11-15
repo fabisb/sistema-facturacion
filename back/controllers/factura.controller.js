@@ -87,7 +87,8 @@ export const facturarController = async (req, res) => {
       "🚀 ~ file: factura.controller.js:93 ~ facturarController ~ detalleFactura:",
       detalleFactura
     );
-    return await res.status(200).json({ ticket, detalleFactura });
+    const fecha = new Date();
+    return await res.status(200).json({id:factura.insertId, ticket, detalleFactura, username,fecha, cliente });
   } catch (error) {
     console.error("🚀 ~ file: factura.controller.js:69 ~ facturarController ~ error:", error);
   }

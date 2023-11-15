@@ -55,3 +55,7 @@ contextBridge.exposeInMainWorld("alerta", {
     return result;
   },
 });
+
+contextBridge.exposeInMainWorld("imprimir", (data) =>
+  ipcRenderer.send("print", JSON.stringify(data))
+);

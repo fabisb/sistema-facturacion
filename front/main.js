@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
+const { PosPrinter } = require("electron-pos-printer");
 
 const electronReload = require("electron-reload");
 const env = process.env.NODE_ENV || "development";
@@ -172,6 +173,14 @@ ipcMain.handle("errorWindow", async (event, arg) => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+ipcMain.on("print", (e, arg) => {
+  const data = JSON.parse(arg);
+  PosPrinter.print(data, {
+    pageSize: "58mm",
+    preview: true,
+    //silent: true,
+  }).catch((e) => console.error(e));
+});
 app.whenReady().then(() => {
   createWindow();
 

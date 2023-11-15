@@ -103,6 +103,10 @@ const imprimirFactura = async () => {
     if (ticketActual.length == 0) {
       return alerta.alert("ERROR", "No hay productos agregados");
     }
+    const validacionLleva = ticketActual.find((tk) => tk.lleva > tk.cantidad);
+    if (validacionLleva) {
+      return alerta.alert("ERROR", "Esta llevando mas de lo aceptado en un producto");
+    }
     let total = 0;
     ticketActual.forEach((tk) => {
       total += parseFloat(tk.lleva).toFixed(0) * parseFloat(tk.precio).toFixed(2);
@@ -123,7 +127,97 @@ const imprimirFactura = async () => {
         headers: { token: token.token },
       }
     );
-    console.log("🚀 ~ file: facturar.js:122 ~ imprimirFactura ~ data:", data);
+    var datos = [
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: `///   user   ///`,
+        style: {
+          fontWeight: "800",
+          textAlign: "center",
+          fontSize: "10px",
+          fontFamily: "Arial",
+        },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: `---Id: ${data.id}`,
+        style: { fontSize: "10px", fontFamily: "Arial", fontWeight: "800" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: `---Cedula: ${data.cliente.cedula}`,
+        style: { fontSize: "10px", fontFamily: "Arial", fontWeight: "800" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: `---fecha: ${data.fecha}`,
+        style: { fontSize: "10px", fontFamily: "Arial", fontWeight: "800" },
+      },
+    ];
+    data.ticket.detalle.map((tk) => {
+      datos.push({
+        type: "table",
+        // style the table
+        style: { border: "1px solid #ddd" },
+        // list of the columns to be rendered in the table header
+        tableHeader: [tk.nombre],
+        // multi dimensional array depicting the rows and columns of the table body
+        tableBody: [`${tk.lleva} || ${tk.precio} ${tk.metrica}`],
+        // list of columns to be rendered in the table footer
+        tableFooter: [],
+        // custom style for the table header
+        tableHeaderStyle: { fontFamily: "Arial", border: "1.5px solid black" },
+        // custom style for the table body
+        tableBodyStyle: { border: "0.5px solid #ddd", fontWeight: "700" },
+        // custom style for the table footer
+        tableFooterStyle: {},
+      });
+    });
+
+    datos.push(
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: `Total: ${total} Bs`,
+        style: {
+          fontSize: "10px",
+          textAlign: "right",
+          fontWeight: "800",
+          fontFamily: "Arial",
+        },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: "Gracias por su compra!",
+        style: {
+          fontSize: "12px",
+          textAlign: "center",
+          fontWeight: "700",
+          fontFamily: "Arial",
+        },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: "/",
+        style: {
+          fontSize: "12px",
+          textAlign: "center",
+          fontWeight: "700",
+          fontFamily: "Arial",
+        },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
+        value: "/",
+        style: {
+          fontSize: "12px",
+          textAlign: "center",
+          fontWeight: "700",
+          fontFamily: "Arial",
+        },
+      }
+    );
+    console.log("🚀 ~ file: facturar.js:122 ~ imprimirFactura ~ data:", datos);
+    await imprimir(datos);
   } catch (error) {
     console.log(error);
   }
