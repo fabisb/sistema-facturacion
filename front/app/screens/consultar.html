@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Ticket</title>
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="card text-center mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Consultar Factura</h5>
+          <p class="card-text">Escriba a continuacion el ID que aparece en el ticket para consultarlo</p>
+          <form onsubmit="event.preventDefault(),consultarTicket()">
+          <input class="form-control" type="number" id="idTicketForm" placeholder="ID de la Factura">
+
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+        </div>
+      </div>
+      <script src="../javascript/consultar.js"></script>
+      <script src="../modules/axios.min.js"></script>
+      <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
