@@ -2,34 +2,38 @@ import { pool } from "../database/db.js";
 
 export const productosController = async (req, res) => {
   const [productos] = await pool.execute("SELECT * FROM productos");
+  try {
+    if (productos.length > 0) {
+      const [cantidadProductos] = await pool.execute("SELECT * FROM cantidad_producto");
+      if (!(cantidadProductos.length > 0)) {
+        return await res
+          .status(400)
+          .json({ mensaje: "No se han encontrado cantidades de productos" });
+      } else {
+        const productosUnidos = [];
 
-  if (productos.length > 0) {
-    const [cantidadProductos] = await pool.execute("SELECT * FROM cantidad_producto");
-    if (!(cantidadProductos.length > 0)) {
-      return await res
-        .status(400)
-        .json({ mensaje: "No se han encontrado cantidades de productos" });
-    } else {
-      const productosUnidos = [];
-
-      // Recorremos el primer arreglo con un bucle for-of
-      for (let producto of productos) {
-        // Buscamos si hay algún objeto en el segundo arreglo que tenga el mismo id
-        let productosCantidad = cantidadProductos.find(
-          (product) => product.id_producto === producto.id
-        );
-        // Si lo encontramos, creamos un nuevo objeto que combine las propiedades de ambos objetos
-        if (productosCantidad) {
-          let productoUnido = { ...producto, ...productosCantidad };
-          // Agregamos el nuevo objeto al arreglo vacío
-          productosUnidos.push(productoUnido);
+        // Recorremos el primer arreglo con un bucle for-of
+        for (let producto of productos) {
+          // Buscamos si hay algún objeto en el segundo arreglo que tenga el mismo id
+          let productosCantidad = cantidadProductos.find(
+            (product) => product.id_producto === producto.id
+          );
+          // Si lo encontramos, creamos un nuevo objeto que combine las propiedades de ambos objetos
+          if (productosCantidad) {
+            let productoUnido = { ...producto, ...productosCantidad };
+            // Agregamos el nuevo objeto al arreglo vacío
+            productosUnidos.push(productoUnido);
+          }
         }
+        // Mostramos el resultado por consola
+        return await res.status(200).json(productosUnidos);
       }
-      // Mostramos el resultado por consola
-      return await res.status(200).json(productosUnidos);
+    } else {
+      return await res.stauts(402).json({ mensaje: "No se han encontrado productos" });
     }
-  } else {
-    return await res.stauts(402).json({ mensaje: "No se han encontrado productos" });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
 
@@ -82,6 +86,7 @@ export const facturarController = async (req, res) => {
       .json({ id: factura.insertId, ticket, detalleFactura, username, fecha, cliente });
   } catch (error) {
     console.error("🚀 ~ file: factura.controller.js:69 ~ facturarController ~ error:", error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
 
@@ -106,23 +111,35 @@ export const agregarClienteController = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
 
 export async function consultarTicketController(req, res, next) {
+  console.log("consultarTicketController");
+
+  console.log(
+    "🚀 ~ file: factura.controller.js:116 ~ consultarTicketController ~ req.params:",
+    req.params
+  );
   const { id } = req.params;
-  if (!id || isNaN(id)) {
-    return await res.stauts(400).json({ mensaje: "Error al recibir parametros" });
+  try {
+    if (!id || isNaN(id)) {
+      return await res.stauts(400).json({ mensaje: "Error al recibir parametros" });
+    }
+    const [ticket] = await pool.execute("SELECT * FROM factura WHERE id = ?", [id]);
+    if (ticket.length === 0) {
+      return await res.stauts(404).json({ mensaje: "No se han encontrado ticket #" + id });
+    }
+    const [detalle] = await pool.execute("SELECT * FROM detalle_factura WHERE id_ticket = ?", [id]);
+    if (detalle.length === 0) {
+      return await res
+        .stauts(404)
+        .json({ mensaje: "No se han encontrado detalles en el ticket #" + id });
+    }
+    return await res.status(200).json({ ticket, detalle });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
-  const [ticket] = await pool.execute("SELECT * FROM factura WHERE id = ?", [id]);
-  if (ticket.length === 0) {
-    return await res.stauts(404).json({ mensaje: "No se han encontrado ticket #" + id });
-  }
-  const [detalle] = await pool.execute("SELECT * FROM detalle_factura WHERE id_ticket = ?", [id]);
-  if (detalle.length === 0) {
-    return await res
-      .stauts(404)
-      .json({ mensaje: "No se han encontrado detalles en el ticket #" + id });
-  }
-  return await res.status(200).json({ ticket, detalle });
 }

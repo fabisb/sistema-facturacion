@@ -5,9 +5,10 @@ async function consultarTicket() {
     }
     const token = await login.getToken();
 
-    await axios.get(urlsv +'/factura/',{
+    const {data} = await axios.get(urlsv +'/api/factura/consultar/',{
         headers: { token: token.token },
 
         params: {id:idTicket}
     })
+    console.log("🚀 ~ file: consultar.js:13 ~ consultarTicket ~ data:", data)
 }
