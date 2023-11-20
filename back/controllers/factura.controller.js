@@ -29,7 +29,7 @@ export const productosController = async (req, res) => {
         return await res.status(200).json(productosUnidos);
       }
     } else {
-      return await res.stauts(402).json({ mensaje: "No se han encontrado productos" });
+      return await res.status(402).json({ mensaje: "No se han encontrado productos" });
     }
   } catch (error) {
     console.log(error);
@@ -120,24 +120,36 @@ export async function consultarTicketController(req, res, next) {
 
   console.log(
     "🚀 ~ file: factura.controller.js:116 ~ consultarTicketController ~ req.params:",
-    req.params
+    req.query
   );
-  const { id } = req.params;
+  const { id } = req.query;
   try {
     if (!id || isNaN(id)) {
-      return await res.stauts(400).json({ mensaje: "Error al recibir parametros" });
+      return await res.status(400).json({ mensaje: "Error al recibir parametros" });
     }
     const [ticket] = await pool.execute("SELECT * FROM factura WHERE id = ?", [id]);
     if (ticket.length === 0) {
-      return await res.stauts(404).json({ mensaje: "No se han encontrado ticket #" + id });
+      return await res.status(404).json({ mensaje: "No se han encontrado ticket #" + id });
     }
-    const [detalle] = await pool.execute("SELECT * FROM detalle_factura WHERE id_ticket = ?", [id]);
+    const [detalle] = await pool.execute("SELECT * FROM detalle_factura WHERE id_factura = ?", [
+      id,
+    ]);
     if (detalle.length === 0) {
       return await res
-        .stauts(404)
+        .status(404)
         .json({ mensaje: "No se han encontrado detalles en el ticket #" + id });
     }
-    return await res.status(200).json({ ticket, detalle });
+    const newDetalle = await Promise.all(
+      detalle.map(async (de) => {
+        let [producto] = await pool.execute("SELECT * from productos where id=?", [de.id_producto]);
+
+        de.producto = producto[0];
+        return de;
+      })
+    );
+
+    console.log("🚀 ~ file: factura.controller.js:148 ~ newDetalle ~ newDetalle:", newDetalle);
+    return await res.status(200).json({ ticket, detalle: newDetalle });
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });

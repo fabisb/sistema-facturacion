@@ -13,6 +13,6 @@ router.post("/crear", verifyToken, agregarClienteController, facturarController)
 
 /* GET users listing. */
 router.get("/productos", verifyToken, productosController);
-router.get("/consultar/:id", verifyToken, consultarTicketController);
+router.get("/consultar/", verifyToken, consultarTicketController);
 
 export default router;
