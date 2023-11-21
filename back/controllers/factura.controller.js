@@ -142,8 +142,9 @@ export async function consultarTicketController(req, res, next) {
     const newDetalle = await Promise.all(
       detalle.map(async (de) => {
         let [producto] = await pool.execute("SELECT * from productos where id=?", [de.id_producto]);
-
+        let [metrica] = await pool.execute('SELECT metrica FROM cantidad_producto WHERE id_producto = ?',[de.id_producto])
         de.producto = producto[0];
+        de.metrica = metrica[0].metrica;
         return de;
       })
     );
